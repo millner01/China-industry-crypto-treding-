@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>China Industry Crypto Trading</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary: #1a237e;
+            --secondary: #00bcd4;
+            --accent: #ff4081;
+            --dark: #121212;
+            --light: #f5f5f5;
+            --success: #4caf50;
+            --warning: #ff9800;
+            --danger: #f44336;
+        }
+        
+        body {
+            background-color: var(--dark);
+            color: var(--light);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow-x: hidden;
+        }
+        
+        .navbar {
+            background-color: rgba(18, 18, 18, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(0, 188, 212, 0.3);
+        }
+        
+        .hero-section {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--dark) 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0,0 L100,0 L100,100 Z" fill="rgba(0,188,212,0.1)"/></svg>');
+            background-size: cover;
+        }
+        
+        .crypto-animation {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 0;
+        }
+        
+        .crypto-coin {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background: radial-gradient(circle, var(--secondary) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: float 15s infinite linear;
+        }
+        
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        
+        .feature-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0, 188, 212, 0.1);
+            backdrop-filter: blur(5px);
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+            border-color: var(--secondary);
+        }
+        
+        .dashboard-container {
+            background: rgba(18, 18, 18, 0.9);
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 20px;
+            border: 1px solid rgba(0, 188, 212, 0.2);
+        }
+        
+        .portfolio-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--secondary);
+            text-shadow: 0 0 10px rgba(0, 188, 212, 0.5);
+        }
+        
+        .profit-indicator {
+            font-size: 1.2rem;
+            font-weight: bold;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 0.7; }
+            50% { opacity: 1; }
+            100% { opacity: 0.7; }
+        }
+        
+        .positive {
+            color: var(--success);
+        }
+        
+        .negative {
+            color: var(--danger);
+        }
+        
+        .staking-plan {
+            background: rgba(26, 35, 126, 0.3);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(0, 188, 212, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .staking-plan:hover {
+            transform: scale(1.02);
+            border-color: var(--secondary);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            border: none;
+            border-radius: 30px;
+            padding: 10px 25px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .form-control {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            border-radius: 10px;
+        }
+        
+        .form-control:focus {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: var(--secondary);
+            color: white;
+            box-shadow: 0 0 0 0.25rem rgba(0, 188, 212, 0.25);
+        }
+        
+        .footer {
+            background: rgba(18, 18, 18, 0.95);
+            border-top: 1px solid rgba(0, 188, 212, 0.3);
+            padding: 40px 0 20px;
+        }
+        
+        .social-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            margin-right: 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .social-icon:hover {
+            background: var(--secondary);
+            transform: translateY(-5px);
+        }
+        
+        .login-container {
+            background: rgba(18, 18, 18, 0.9);
+            border-radius: 15px;
+            padding: 30px;
+            border: 1px solid rgba(0, 188, 212, 0.3);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .risk-selector {
+            display: flex;
+            justify-content: space-between;
+            margin: 20px 0;
+        }
+        
+        .risk-option {
+            flex: 1;
+            text-align: center;
+            padding: 15px;
+            margin: 0 5px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .risk-option.active {
+            background: rgba(0, 188, 212, 0.2);
+            border: 1px solid var(--secondary);
+        }
+        
+        .risk-option.low {
+            border-left: 4px solid var(--success);
+        }
+        
+        .risk-option.medium {
+            border-left: 4px solid var(--warning);
+        }
+        
+        .risk-option.high {
+            border-left: 4px solid var(--danger);
+        }
+        
+        .trading-view {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            padding: 15px;
+            height: 400px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .price-ticker {
+            display: flex;
+            overflow-x: auto;
+            padding: 10px 0;
+            margin-bottom: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+        }
+        
+        .ticker-item {
+            padding: 5px 15px;
+            margin: 0 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 5px;
+            min-width: 120px;
+            text-align: center;
+        }
+        
+        .nav-tabs .nav-link {
+            color: rgba(255, 255, 255, 0.7);
+            border: none;
+            border-radius: 0;
+            padding: 10px 20px;
+        }
+        
+        .nav-tabs .nav-link.active {
+            color: var(--secondary);
+            background: transparent;
+            border-bottom: 2px solid var(--secondary);
+        }
+        
+        .wallet-card {
+            background: rgba(26, 35, 126, 0.3);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(0, 188, 212, 0.2);
+        }
+        
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: var(--accent);
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+        }
+        
+        .floating-action {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 1000;
+        }
+        
+        @media (max-width: 768px) {
+            .hero-section {
+                min-height: 70vh;
+                text-align: center;
+            }
+            
+            .portfolio-value {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-chart-line me-2"></i>
+                <strong>China Industry Crypto Trading</strong>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#home">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#features">Features</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#staking">Staking</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#ai-trading">AI Trading</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#about">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#loginModal">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="btn btn-primary ms-2" href="#" data-bs-toggle="modal" data-bs-target="#registerModal">Sign Up</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section" id="home">
+        <div class="crypto-animation" id="cryptoAnimation"></div>
+        <div class="container position-relative">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <h1 class="display-4 fw-bold mb-4">Advanced Crypto Trading with AI Technology</h1>
+                    <p class="lead mb-4">Maximize your crypto investments with our cutting-edge AI trading bots, staking plans, and mining options. Join thousands of successful traders today.</p>
+                    <div class="d-flex flex-wrap gap-3">
+                        <a href="#" class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#registerModal">
+                            <i class="fas fa-rocket me-2"></i>Get Started
+                        </a>
+                        <a href="#features" class="btn btn-outline-light btn-lg">
+                            <i class="fas fa-play-circle me-2"></i>How It Works
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-6 text-center">
+                    <div class="login-container mt-5 mt-lg-0">
+                        <h3 class="mb-4">Welcome Back</h3>
+                        <form id="loginForm">
+                            <div class="mb-3">
+                                <input type="email" class="form-control" placeholder="Email Address" required>
+                            </div>
+                            <div class="mb-3">
+                                <input type="password" class="form-control" placeholder="Password" required>
+                            </div>
+                            <div class="mb-3 form-check">
+                                <input type="checkbox" class="form-check-input" id="rememberMe">
+                                <label class="form-check-label" for="rememberMe">Remember me</label>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100">Login to Dashboard</button>
+                        </form>
+                        <div class="text-center mt-3">
+                            <a href="#" class="text-decoration-none">Forgot Password?</a>
+                        </div>
+                        <hr class="my-4">
+                        <p class="text-center mb-0">Don't have an account? <a href="#" class="text-decoration-none" data-bs-toggle="modal" data-bs-target="#registerModal">Sign Up</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Portfolio Ticker -->
+    <section class="py-3 bg-dark">
+        <div class="container">
+            <div class="price-ticker">
+                <div class="ticker-item">
+                    <div class="fw-bold">BTC</div>
+                    <div class="positive">$45,218.73 <i class="fas fa-arrow-up"></i></div>
+                </div>
+                <div class="ticker-item">
+                    <div class="fw-bold">ETH</div>
+                    <div class="positive">$3,125.64 <i class="fas fa-arrow-up"></i></div>
+                </div>
+                <div class="ticker-item">
+                    <div class="fw-bold">BNB</div>
+                    <div class="negative">$412.35 <i class="fas fa-arrow-down"></i></div>
+                </div>
+                <div class="ticker-item">
+                    <div class="fw-bold">XRP</div>
+                    <div class="positive">$0.7521 <i class="fas fa-arrow-up"></i></div>
+                </div>
+                <div class="ticker-item">
+                    <div class="fw-bold">ADA</div>
+                    <div class="positive">$1.243 <i class="fas fa-arrow-up"></i></div>
+                </div>
+                <div class="ticker-item">
+                    <div class="fw-bold">SOL</div>
+                    <div class="positive">$102.47 <i class="fas fa-arrow-up"></i></div>
+                </div>
+                <div class="ticker-item">
+                    <div class="fw-bold">DOT</div>
+                    <div class="negative">$28.91 <i class="fas fa-arrow-down"></i></div>
+                </div>
+                <div class="ticker-item">
+                    <div class="fw-bold">DOGE</div>
+                    <div class="positive">$0.1582 <i class="fas fa-arrow-up"></i></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="py-5">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="fw-bold">Powerful Trading Features</h2>
+                <p class="lead">Our platform offers everything you need for successful crypto trading</p>
+            </div>
+            <div class="row">
+                <div class="col-lg-4 col-md-6">
+                    <div class="feature-card">
+                        <div class="text-center mb-4">
+                            <i class="fas fa-robot fa-3x text-primary"></i>
+                        </div>
+                        <h4 class="text-center mb-3">AI Trading Bots</h4>
+                        <p class="text-center">Our advanced AI bots trade 24/7 using sophisticated algorithms to maximize your profits while minimizing risks.</p>
+                        <ul class="mt-3">
+                            <li>DeepSeek & Qwen AI integration</li>
+                            <li>Customizable risk levels</li>
+                            <li>Real-time market analysis</li>
+                            <li>Automated portfolio management</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="feature-card">
+                        <div class="text-center mb-4">
+                            <i class="fas fa-coins fa-3x text-warning"></i>
+                        </div>
+                        <h4 class="text-center mb-3">Staking & Mining</h4>
+                        <p class="text-center">Earn passive income with our flexible staking plans and mining options with guaranteed returns.</p>
+                        <ul class="mt-3">
+                            <li>Flexible staking periods</li>
+                            <li>Competitive interest rates</li>
+                            <li>Multiple crypto options</li>
+                            <li>Daily & monthly returns</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="feature-card">
+                        <div class="text-center mb-4">
+                            <i class="fas fa-shield-alt fa-3x text-success"></i>
+                        </div>
+                        <h4 class="text-center mb-3">Secure & Reliable</h4>
+                        <p class="text-center">Your funds and data are protected with enterprise-grade security measures and insurance coverage.</p>
+                        <ul class="mt-3">
+                            <li>Cold storage wallets</li>
+                            <li>Two-factor authentication</li>
+                            <li>Regular security audits</li>
+                            <li>Insurance protection</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Staking Plans -->
+    <section id="staking" class="py-5 bg-dark">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="fw-bold">Staking Plans</h2>
+                <p class="lead">Choose from our flexible staking plans with guaranteed returns</p>
+            </div>
+            <div class="row">
+                <div class="col-md-6 col-lg-4">
+                    <div class="staking-plan">
+                        <h4 class="text-center">Basic Plan</h4>
+                        <div class="text-center my-3">
+                            <span class="h2 fw-bold">$10 - $49</span>
+                        </div>
+                        <div class="text-center">
+                            <div class="mb-2"><i class="fas fa-calendar-day me-2 text-primary"></i> 0.1% Daily</div>
+                            <div><i class="fas fa-calendar-alt me-2 text-primary"></i> 3% Monthly</div>
+                        </div>
+                        <button class="btn btn-primary w-100 mt-3">Select Plan</button>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4">
+                    <div class="staking-plan">
+                        <h4 class="text-center">Silver Plan</h4>
+                        <div class="text-center my-3">
+                            <span class="h2 fw-bold">$50 - $99</span>
+                        </div>
+                        <div class="text-center">
+                            <div class="mb-2"><i class="fas fa-calendar-day me-2 text-primary"></i> 0.2% Daily</div>
+                            <div><i class="fas fa-calendar-alt me-2 text-primary"></i> 6% Monthly</div>
+                        </div>
+                        <button class="btn btn-primary w-100 mt-3">Select Plan</button>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4">
+                    <div class="staking-plan">
+                        <h4 class="text-center">Gold Plan</h4>
+                        <div class="text-center my-3">
+                            <span class="h2 fw-bold">$100 - $499</span>
+                        </div>
+                        <div class="text-center">
+                            <div class="mb-2"><i class="fas fa-calendar-day me-2 text-primary"></i> 0.3% Daily</div>
+                            <div><i class="fas fa-calendar-alt me-2 text-primary"></i> 9% Monthly</div>
+                        </div>
+                        <button class="btn btn-primary w-100 mt-3">Select Plan</button>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4">
+                    <div class="staking-plan">
+                        <h4 class="text-center">Platinum Plan</h4>
+                        <div class="text-center my-3">
+                            <span class="h2 fw-bold">$500 - $999</span>
+                        </div>
+                        <div class="text-center">
+                            <div class="mb-2"><i class="fas fa-calendar-day me-2 text-primary"></i> 0.35% Daily</div>
+                            <div><i class="fas fa-calendar-alt me-2 text-primary"></i> 10.5% Monthly</div>
+                        </div>
+                        <button class="btn btn-primary w-100 mt-3">Select Plan</button>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4">
+                    <div class="staking-plan">
+                        <h4 class="text-center">Diamond Plan</h4>
+                        <div class="text-center my-3">
+                            <span class="h2 fw-bold">$1000 - $500,000</span>
+                        </div>
+                        <div class="text-center">
+                            <div class="mb-2"><i class="fas fa-calendar-day me-2 text-primary"></i> 0.7% Daily</div>
+                            <div><i class="fas fa-calendar-alt me-2 text-primary"></i> 21% Monthly</div>
+                        </div>
+                        <button class="btn btn-primary w-100 mt-3">Select Plan</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- AI Trading Section -->
+    <section id="ai-trading" class="py-5">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="fw-bold">AI Trading</h2>
+                <p class="lead">Let our advanced AI bots trade for you with customizable risk levels</p>
+            </div>
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="dashboard-container">
+                        <h4 class="mb-4">Configure Your AI Trader</h4>
+                        <div class="mb-4">
+                            <label class="form-label">Select AI Model</label>
+                            <select class="form-select">
+                                <option selected>DeepSeek AI</option>
+                                <option>Qwen AI</option>
+                            </select>
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label">Trading Amount ($)</label>
+                            <input type="number" class="form-control" placeholder="Enter amount" min="10">
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label">Select Risk Level</label>
+                            <div class="risk-selector">
+                                <div class="risk-option low active">
+                                    <i class="fas fa-shield-alt fa-2x mb-2 text-success"></i>
+                                    <div>Low Risk</div>
+                                    <small>Conservative</small>
+                                </div>
+                                <div class="risk-option medium">
+                                    <i class="fas fa-balance-scale fa-2x mb-2 text-warning"></i>
+                                    <div>Medium Risk</div>
+                                    <small>Balanced</small>
+                                </div>
+                                <div class="risk-option high">
+                                    <i class="fas fa-bolt fa-2x mb-2 text-danger"></i>
+                                    <div>High Risk</div>
+                                    <small>Aggressive</small>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary w-100">Start AI Trading</button>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="dashboard-container">
+                        <h4 class="mb-4">Live Trading View</h4>
+                        <div class="trading-view">
+                            <canvas id="tradingChart"></canvas>
+                        </div>
+                        <div class="mt-3">
+                            <div class="row text-center">
+                                <div class="col-4">
+                                    <div class="fw-bold">Today's P&L</div>
+                                    <div class="positive">+$2,367.45</div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="fw-bold">Active Trades</div>
+                                    <div>12</div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="fw-bold">Success Rate</div>
+                                    <div>87.3%</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 mb-4">
+                    <h5 class="mb-3">China Industry Crypto Trading</h5>
+                    <p>Advanced crypto trading platform with AI-powered bots, staking, and mining options for maximum returns.</p>
+                    <div class="mt-4">
+                        <a href="#" class="social-icon"><i class="fab fa-telegram"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-facebook"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h5 class="mb-3">Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="text-decoration-none">Home</a></li>
+                        <li><a href="#features" class="text-decoration-none">Features</a></li>
+                        <li><a href="#staking" class="text-decoration-none">Staking</a></li>
+                        <li><a href="#ai-trading" class="text-decoration-none">AI Trading</a></li>
+                        <li><a href="#" class="text-decoration-none">About Us</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h5 class="mb-3">Support</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="text-decoration-none">Help Center</a></li>
+                        <li><a href="#" class="text-decoration-none">Contact Us</a></li>
+                        <li><a href="#" class="text-decoration-none">Privacy Policy</a></li>
+                        <li><a href="#" class="text-decoration-none">Terms of Service</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 mb-4">
+                    <h5 class="mb-3">Contact Info</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><i class="fas fa-envelope me-2"></i> support@chinaindustrycrypto.com</li>
+                        <li class="mb-2"><i class="fab fa-telegram me-2"></i> @Kaitoreignx</li>
+                        <li class="mb-2"><i class="fab fa-whatsapp me-2"></i> +1 226-493-9021</li>
+                    </ul>
+                </div>
+            </div>
+            <hr class="my-4">
+            <div class="text-center">
+                <p>&copy; 2023 China Industry Crypto Trading. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Login Modal -->
+    <div class="modal fade" id="loginModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content login-container">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title">Login to Your Account</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="modalLoginForm">
+                        <div class="mb-3">
+                            <label class="form-label">Email Address</label>
+                            <input type="email" class="form-control" placeholder="Enter your email" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Password</label>
+                            <input type="password" class="form-control" placeholder="Enter your password" required>
+                        </div>
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="modalRememberMe">
+                            <label class="form-check-label" for="modalRememberMe">Remember me</label>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Login</button>
+                    </form>
+                    <div class="text-center mt-3">
+                        <a href="#" class="text-decoration-none">Forgot Password?</a>
+                    </div>
+                    <hr class="my-4">
+                    <p class="text-center mb-0">Don't have an account? <a href="#" class="text-decoration-none" data-bs-toggle="modal" data-bs-target="#registerModal">Sign Up</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div class="modal fade" id="registerModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content login-container">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title">Create New Account</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="registerForm">
+                        <div class="mb-3">
+                            <label class="form-label">Full Name</label>
+                            <input type="text" class="form-control" placeholder="Enter your full name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Email Address</label>
+                            <input type="email" class="form-control" placeholder="Enter your email" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Password</label>
+                            <input type="password" class="form-control" placeholder="Create a password" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Confirm Password</label>
+                            <input type="password" class="form-control" placeholder="Confirm your password" required>
+                        </div>
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="agreeTerms" required>
+                            <label class="form-check-label" for="agreeTerms">I agree to the <a href="#" class="text-decoration-none">Terms of Service</a> and <a href="#" class="text-decoration-none">Privacy Policy</a></label>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Create Account</button>
+                    </form>
+                    <hr class="my-4">
+                    <p class="text-center mb-0">Already have an account? <a href="#" class="text-decoration-none" data-bs-toggle="modal" data-bs-target="#loginModal">Login</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating Action Button -->
+    <div class="floating-action">
+        <div class="btn-group dropup">
+            <button type="button" class="btn btn-primary btn-lg rounded-circle p-3" data-bs-toggle="dropdown">
+                <i class="fas fa-plus"></i>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-dark">
+                <li><a class="dropdown-item" href="#"><i class="fas fa-robot me-2"></i> AI Trading</a></li>
+                <li><a class="dropdown-item" href="#"><i class="fas fa-coins me-2"></i> Staking</a></li>
+                <li><a class="dropdown-item" href="#"><i class="fas fa-download me-2"></i> Deposit</a></li>
+                <li><a class="dropdown-item" href="#"><i class="fas fa-upload me-2"></i> Withdraw</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="#"><i class="fas fa-headset me-2"></i> Support</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Create crypto animation coins
+        document.addEventListener('DOMContentLoaded', function() {
+            const cryptoAnimation = document.getElementById('cryptoAnimation');
+            const coinsCount = 20;
+            
+            for (let i = 0; i < coinsCount; i++) {
+                const coin = document.createElement('div');
+                coin.classList.add('crypto-coin');
+                
+                // Random position and animation delay
+                const left = Math.random() * 100;
+                const delay = Math.random() * 15;
+                const duration = 15 + Math.random() * 10;
+                
+                coin.style.left = `${left}%`;
+                coin.style.animationDelay = `${delay}s`;
+                coin.style.animationDuration = `${duration}s`;
+                
+                cryptoAnimation.appendChild(coin);
+            }
+            
+            // Initialize trading chart
+            const ctx = document.getElementById('tradingChart').getContext('2d');
+            const tradingChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['9:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00'],
+                    datasets: [{
+                        label: 'Portfolio Value',
+                        data: [65000, 65200, 65500, 65300, 65800, 66200, 66700, 67318],
+                        borderColor: '#00bcd4',
+                        backgroundColor: 'rgba(0, 188, 212, 0.1)',
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: {
+                                display: false
+                            },
+                            ticks: {
+                                color: 'rgba(255, 255, 255, 0.7)'
+                            }
+                        },
+                        y: {
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            },
+                            ticks: {
+                                color: 'rgba(255, 255, 255, 0.7)'
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Simulate portfolio value changes
+            let portfolioValue = 67318;
+            const portfolioElement = document.querySelector('.portfolio-value');
+            const pnlElement = document.querySelector('.profit-indicator');
+            
+            setInterval(() => {
+                const change = (Math.random() - 0.5) * 100;
+                portfolioValue += change;
+                
+                portfolioElement.textContent = `$${portfolioValue.toFixed(2)}`;
+                
+                if (change >= 0) {
+                    pnlElement.textContent = `+$${change.toFixed(2)} Today`;
+                    pnlElement.className = 'profit-indicator positive';
+                } else {
+                    pnlElement.textContent = `-$${Math.abs(change).toFixed(2)} Today`;
+                    pnlElement.className = 'profit-indicator negative';
+                }
+                
+                // Update chart data
+                const newData = tradingChart.data.datasets[0].data;
+                newData.shift();
+                newData.push(portfolioValue);
+                tradingChart.update();
+            }, 3000);
+            
+            // Risk selector functionality
+            const riskOptions = document.querySelectorAll('.risk-option');
+            riskOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    riskOptions.forEach(opt => opt.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+            
+            // Form submissions
+            document.getElementById('loginForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                // In a real app, you would handle login here
+                alert('Login functionality would be implemented here');
+            });
+            
+            document.getElementById('registerForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                // In a real app, you would handle registration here
+                alert('Registration functionality would be implemented here');
+            });
+        });
+    </script>
+</body>
+</html>
